@@ -32,7 +32,7 @@ var audioProcessor = AudioProcessor()
 audioProcessor.start(directory: NSTemporaryDirectory())
 ```
 
-Then you simply uses AsyncStreaming to get recored files urls: 
+Then you simply uses AsyncStreaming to get recorded files urls: 
 
 ```swift
 for try await fileURL in audioProcessor.recordingStream {
