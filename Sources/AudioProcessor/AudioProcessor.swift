@@ -8,7 +8,7 @@
 import Foundation
 import AVFoundation
 
-class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject {
+public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject {
     
     private var audioRecorder: AVAudioRecorder?
     private var recordingSession: AVAudioSession?
@@ -22,7 +22,7 @@ class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject {
     private var directory: String = NSTemporaryDirectory()
 
     
-    var recordingStream: AsyncThrowingStream<URL, Error> {
+    public var recordingStream: AsyncThrowingStream<URL, Error> {
             AsyncThrowingStream { continuation in
                 self.recordingContinuation = continuation
             }
@@ -30,7 +30,7 @@ class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject {
     
     private var recordingContinuation: AsyncThrowingStream<URL, Error>.Continuation?
     
-    func start(directory: String) {
+    public func start(directory: String) {
         self.directory = directory
         setupRecordingSession()
     }
@@ -86,7 +86,7 @@ class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject {
         }
     }
     
-    func stop() {
+    public func stop() {
         timer?.invalidate()
         timer = nil
         
