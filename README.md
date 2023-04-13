@@ -1,6 +1,19 @@
-# AudioProcessor
+# AudioProcessor 🎙️
 
-AudioProcessor - Swift Package designed for seamless audio recording on iOS devices. With its intuitive folder management, this package stores your recorded audio files in a designated folder. The real power of AudioProcessor lies in its splitting capabilities. Customise your recordings by splitting files at specified intervals of time or detect pauses in audio for automatic segmentation.
+_A Swift Package for seamless audio recording on iOS devices._
+
+AudioProcessor is an intuitive Swift Package tailored for effortless audio recording and management on iOS devices. By providing a designated folder, you can store and organize your recorded audio files with ease. The package offers advanced splitting capabilities, allowing you to:
+
+1. Split files at specified intervals 🕒
+2. Detect pauses in speech and automatically split files based on them 🤫
+
+## Features ✨
+
+* **Intuitive Folder Management**: Effortlessly store and manage your audio files in a designated folder.
+* **Customizable Splitting Intervals**: Define specific intervals for splitting audio files to suit your requirements.
+* **Automatic Pause Detection**: Detect pauses in speech and split files accordingly for optimal organization.
+
+# Usage
 
 ## Parameters
 
