@@ -76,8 +76,11 @@ class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject {
             timer = Timer.scheduledTimer(timeInterval: recordingInterval, target: self, selector: #selector(stopAndRestartRecording), userInfo: nil, repeats: false)
 
             // Add a timer to check for pauses
-            pauseTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(checkForPause), userInfo: nil, repeats: true)
+            if pauseDuration > 0 {
+                pauseTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(checkForPause), userInfo: nil, repeats: true)
 
+            }
+            
         } catch {
             // Handle errors during recording setup
         }
@@ -93,10 +96,13 @@ class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject {
         try? recordingSession?.setActive(false, options: .notifyOthersOnDeactivation)
         recordingSession = nil
 
-        // Stop and reset the pause timer
-        pauseTimer?.invalidate()
-        pauseTimer = nil
-        pauseDurationCounter = 0
+        if pauseDuration > 0 {
+            // Stop and reset the pause timer
+            pauseTimer?.invalidate()
+            pauseTimer = nil
+            pauseDurationCounter = 0
+        }
+       
         
     }
 
@@ -111,10 +117,13 @@ class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject {
         timer = nil
         
 
-        // Stop and reset the pause timer
-        pauseTimer?.invalidate()
-        pauseTimer = nil
-        pauseDurationCounter = 0
+        if pauseDuration > 0 {
+            // Stop and reset the pause timer
+            pauseTimer?.invalidate()
+            pauseTimer = nil
+            pauseDurationCounter = 0
+        }
+      
         
         startRecording()
     }
