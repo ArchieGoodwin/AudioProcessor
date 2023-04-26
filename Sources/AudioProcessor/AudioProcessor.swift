@@ -89,9 +89,9 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
     public func stop() {
         timer?.invalidate()
         timer = nil
-        
+        recordingContinuation?.yield(filePath)
+
         audioRecorder?.stop()
-        recordingContinuation?.finish()
 
         try? recordingSession?.setActive(false, options: .notifyOthersOnDeactivation)
         recordingSession = nil
