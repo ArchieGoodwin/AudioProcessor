@@ -12,7 +12,7 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
     
     private var audioRecorder: AVAudioRecorder?
     private var recordingSession: AVAudioSession?
-    private var filePath: URL!
+    private var filePath: URL?
     private var timer: Timer?
     private var pauseTimer: Timer?
     public var recordingInterval: TimeInterval = 20
@@ -68,7 +68,10 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
         ]
 
         do {
-            audioRecorder = try AVAudioRecorder(url: filePath, settings: settings)
+            guard let path = filePath else {
+                return
+            }
+            audioRecorder = try AVAudioRecorder(url: path, settings: settings)
             audioRecorder?.delegate = self
             audioRecorder?.isMeteringEnabled = true
             audioRecorder?.record()
@@ -89,7 +92,10 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
     public func stop() {
         timer?.invalidate()
         timer = nil
-        recordingContinuation?.yield(filePath)
+        if let path = filePath {
+            recordingContinuation?.yield(path)
+        }
+        
 
         audioRecorder?.stop()
 
@@ -111,7 +117,9 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
             return
         }
         audioRecorder?.stop()
-        recordingContinuation?.yield(filePath)
+        if let path = filePath {
+            recordingContinuation?.yield(path)
+        }
 
         timer?.invalidate()
         timer = nil
