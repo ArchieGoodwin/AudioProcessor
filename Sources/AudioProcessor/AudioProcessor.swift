@@ -95,7 +95,6 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
         if let path = filePath {
             recordingContinuation?.yield(path)
         }
-        
 
         audioRecorder?.stop()
 
@@ -116,10 +115,10 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
         if pauseTimer == nil && timer == nil {
             return
         }
-        audioRecorder?.stop()
         if let path = filePath {
             recordingContinuation?.yield(path)
         }
+        audioRecorder?.stop()
 
         timer?.invalidate()
         timer = nil
