@@ -44,6 +44,7 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
     
     public func startStreaming(callback: @escaping (Data) -> Void) {
         self.callbackStreaming = callback
+        startAnalyzingAudio()
     }
    
     private func startAnalyzingAudio() {
