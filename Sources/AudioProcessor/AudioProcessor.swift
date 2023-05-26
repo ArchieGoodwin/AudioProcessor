@@ -43,6 +43,7 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
     
     #if os(iOS) || os(tvOS)
     private var recordingSession: AVAudioSession?
+    
     public func startStreaming(callback: @escaping (Data) -> Void) {
         self.callbackStreaming = callback
     }
@@ -136,6 +137,7 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
     }
     
     public func stop() {
+        audioEngine.stop()
         timer?.invalidate()
         timer = nil
         if let path = filePath {
