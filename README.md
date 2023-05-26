@@ -47,6 +47,7 @@ var audioProcessor = AudioProcessor()
 audioProcessor.startStreaming { data in
     //your data processing
 }
+```
 
 ## License
 
