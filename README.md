@@ -12,6 +12,7 @@ AudioProcessor is an intuitive Swift Package tailored for effortless audio recor
 * **Intuitive Folder Management**: Effortlessly store and manage your audio files in a designated folder.
 * **Customizable Splitting Intervals**: Define specific intervals for splitting audio files to suit your requirements.
 * **Automatic Pause Detection**: Detect pauses in speech and split files accordingly for optimal organization.
+* **Support for Audio streaming** Returns streaming Data to provided callback
 
 # Usage
 
@@ -39,6 +40,13 @@ for try await fileURL in audioProcessor.recordingStream {
     print("New recording: \(fileURL)")
 }
 ```
+
+If you want to receive constant streaming of Data then: 
+```swift
+var audioProcessor = AudioProcessor()
+audioProcessor.startStreaming { data in
+    //your data processing
+}
 
 ## License
 
