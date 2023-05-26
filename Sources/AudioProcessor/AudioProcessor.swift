@@ -19,8 +19,6 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
     public var recordingInterval: TimeInterval = 20
     public var pauseThreshold: Float = -40.0
     public var pauseDuration: TimeInterval = 1.5
-    private var pauseDurationCounter: TimeInterval = 0
-    private var directory: String = NSTemporaryDirectory()
     
     private var callbackStreaming: ((Data) -> Void)? = nil
     private let audioEngine = AVAudioEngine()
