@@ -10,8 +10,8 @@ import AVFoundation
 
 public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject {
     
-    private var audioRecorder: AVAudioRecorder?
-    private var recordingSession: AVAudioSession?
+    private var audioRecorder: AVAudioRecorder? = nil
+    private var recordingSession: AVAudioSession? = nil
     private var filePath: URL?
     private var timer: Timer?
     private var pauseTimer: Timer?
@@ -20,8 +20,10 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
     public var pauseDuration: TimeInterval = 1.5
     private var pauseDurationCounter: TimeInterval = 0
     private var directory: String = NSTemporaryDirectory()
-
     
+    private var callbackStreaming: ((Data) -> Void)? = nil
+    private let audioEngine = AVAudioEngine()
+
     public var recordingStream: AsyncThrowingStream<URL, Error> {
             AsyncThrowingStream { continuation in
                 self.recordingContinuation = continuation
@@ -34,7 +36,45 @@ public class AudioProcessor: NSObject, AVAudioRecorderDelegate, ObservableObject
         self.directory = directory
         setupRecordingSession()
     }
+    
+    public func startStreaming(callback: @escaping (Data) -> Void) {
+        self.callbackStreaming = callback
+    }
    
+    private func startAnalyzingAudio() {
+        let inputNode = audioEngine.inputNode
+        let inputFormat = inputNode.inputFormat(forBus: 0)
+        let outputFormat = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: inputFormat.sampleRate, channels: inputFormat.channelCount, interleaved: true)
+        let converterNode = AVAudioMixerNode()
+        let sinkNode = AVAudioMixerNode()
+        
+        audioEngine.attach(converterNode)
+        audioEngine.attach(sinkNode)
+        
+        converterNode.installTap(onBus: 0, bufferSize: 1024, format: converterNode.outputFormat(forBus: 0)) { (buffer: AVAudioPCMBuffer!, time: AVAudioTime!) -> Void in
+            if let data = self.toNSData(buffer: buffer) {
+                if let callback = self.callbackStreaming {
+                    callback(data)
+                }
+            }
+        }
+        
+        audioEngine.connect(inputNode, to: converterNode, format: inputFormat)
+        audioEngine.connect(converterNode, to: sinkNode, format: outputFormat)
+        audioEngine.prepare()
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.record)
+            try audioEngine.start()
+        } catch {
+            print(error)
+        }
+    }
+    
+    private func toNSData(buffer: AVAudioPCMBuffer) -> Data? {
+        let audioBuffer = buffer.audioBufferList.pointee.mBuffers
+        return Data(bytes: audioBuffer.mData!, count: Int(audioBuffer.mDataByteSize))
+    }
     
     func setupRecordingSession() {
         recordingSession = AVAudioSession.sharedInstance()
